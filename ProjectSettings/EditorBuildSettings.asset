@@ -14,9 +14,12 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/Testing.unity
     guid: 2315c82b103224436917a8c6369e744a
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/mainscene.unity
     guid: 06610c3c6d7b8461ca9e6db776f1302f
+  - enabled: 1
+    path: Assets/Scenes/ThomasScene.unity
+    guid: ce45b18dfb9c1487aa63e0066d1ef8a2
   m_configObjects:
     Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 53947370dfa6248a5b90e07d8fb8ca04, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 68d795039158a40d6b82a480c28c471b, type: 2}
