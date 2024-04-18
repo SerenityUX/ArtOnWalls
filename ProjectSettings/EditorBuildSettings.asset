@@ -14,10 +14,10 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/Testing.unity
     guid: 2315c82b103224436917a8c6369e744a
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/mainscene.unity
     guid: 06610c3c6d7b8461ca9e6db776f1302f
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/ThomasScene.unity
     guid: ce45b18dfb9c1487aa63e0066d1ef8a2
   m_configObjects:
