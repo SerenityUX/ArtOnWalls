@@ -2,29 +2,18 @@ using UnityEngine;
 
 public class MaterialSwapper : MonoBehaviour
 {
-    // Public field to assign the material in the inspector
-    public Material newMaterial;
-
-    // Public field to assign the spray texture prefab in the inspector
-    public GameObject sprayTexturePrefab;
-
-    void OnCollisionEnter(Collision collision)
+    // Method to change the material of the cube's Renderer
+    public void ChangeMaterial(Material newMaterial)
     {
-        // Check if the collider belongs to a spray can
-        if (collision.gameObject.CompareTag("SprayCan"))
+        Renderer renderer = GetComponent<Renderer>();
+        if (renderer != null)
         {
-            // Instantiate the spray texture prefab at the cube's position with default rotation
-            if (sprayTexturePrefab != null)
-            {
-                GameObject instantiatedPrefab = Instantiate(sprayTexturePrefab, transform.position, Quaternion.identity, transform);
-
-                // Check if the instantiated prefab has a Renderer component and apply the new material
-                Renderer renderer = instantiatedPrefab.GetComponent<Renderer>();
-                if (renderer != null && newMaterial != null)
-                {
-                    renderer.material = newMaterial;
-                }
-            }
+            renderer.material = newMaterial;
+            Debug.Log("Material changed to: " + newMaterial.name);
+        }
+        else
+        {
+            Debug.Log("No renderer found on the object.");
         }
     }
 }
