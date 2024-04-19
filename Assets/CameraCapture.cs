@@ -5,24 +5,16 @@ using System;
 
 public class CameraCapture : MonoBehaviour
 {
+    // You can remove these if they are not needed externally
     public Camera cameraToCapture;
     public RenderTexture renderTexture;
 
-    private void Start()
+    public void TakePhoto(Action<string> onPhotoTaken)
     {
-        StartCoroutine(CaptureRoutine());
+        CaptureView(onPhotoTaken);
     }
 
-    IEnumerator CaptureRoutine()
-    {
-        while (true)
-        {
-            CaptureView();
-            yield return new WaitForSeconds(10f);
-        }
-    }
-
-    void CaptureView()
+    void CaptureView(Action<string> onPhotoTaken)
     {
         Texture2D texture = new Texture2D(renderTexture.width, renderTexture.height, TextureFormat.RGB24, false);
         RenderTexture.active = renderTexture;
@@ -34,12 +26,12 @@ public class CameraCapture : MonoBehaviour
         string base64Image = Convert.ToBase64String(imageBytes);
         string dataUrl = "data:image/png;base64," + base64Image;
 
-        StartCoroutine(UploadImageToFreeImageHost(dataUrl, "0"));
+        StartCoroutine(UploadImageToFreeImageHost(dataUrl, onPhotoTaken));
 
         Destroy(texture); // Clean up the texture to prevent memory leaks
     }
 
-    IEnumerator UploadImageToFreeImageHost(string imageUrl, string pin)
+    IEnumerator UploadImageToFreeImageHost(string imageUrl, Action<string> onPhotoTaken)
     {
         WWWForm formData = new WWWForm();
         formData.AddField("key", "6d207e02198a847aa98d0a2a901485a5");
@@ -57,7 +49,7 @@ public class CameraCapture : MonoBehaviour
                 FreeImageHostResponse response = JsonUtility.FromJson<FreeImageHostResponse>(responseText);
                 if (response.status_code == 200 && response.image != null)
                 {
-                    StartCoroutine(UploadImageUrlToDatabase(response.image.url));
+                    onPhotoTaken?.Invoke(response.image.url); // Notify caller with the image URL
                 }
                 else
                 {
@@ -67,28 +59,6 @@ public class CameraCapture : MonoBehaviour
             else
             {
                 Debug.LogError("Image upload failed: " + www.error);
-            }
-        }
-    }
-
-    IEnumerator UploadImageUrlToDatabase(string imageUrl)
-    {
-        WWWForm formData = new WWWForm();
-        formData.AddField("image", imageUrl);
-        formData.AddField("pin", "0");
-
-        using (UnityWebRequest www = UnityWebRequest.Post("https://x8ki-letl-twmt.n7.xano.io/api:HIeiN0nD/spray", formData))
-        {
-            yield return www.SendWebRequest();
-
-            if (www.result == UnityWebRequest.Result.Success)
-            {
-                Debug.Log("POST request to database API successful. Response: " + www.downloadHandler.text);
-            }
-            else
-            {
-                Debug.LogError("Error in POST request to database API: " + www.error);
-                Debug.LogError("Response from database API: " + www.downloadHandler.text);
             }
         }
     }
